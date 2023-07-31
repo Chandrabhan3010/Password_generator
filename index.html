@@ -13,8 +13,8 @@
         <!-- display container -->
         <div class="display-container">
             <input readonly placeholder="password" class="display" data-passwordDisplay>
-            <button>
-                <span data-copyMsg>copied</span>
+            <button data-copy>
+                <span data-copyMsg >copied</span>
                 <img src="./images/copy.svg" alt="copy-icon" width="23px" height="23px">
             </button>
         </div>
@@ -26,7 +26,7 @@
             </div>
 
             <!-- slider -->
-            <input type="range" min="1" max="20" class="slider" step="1">
+            <input type="range" min="1" max="20" class="slider" step="1" data-lenghtSlider>
 
             <!-- checkbox -->
             <div>
@@ -36,15 +36,15 @@
 
             <div>
                 <input type="checkbox" name="" id="lowercase">
-                <label for="lowercase">includes uppercase letter</label>
+                <label for="lowercase">includes lowercase letter</label>
             </div>
             <div>
                 <input type="checkbox" name="" id="numbers">
-                <label for="numbers">includes uppercase letter</label>
+                <label for="numbers">includes numbers</label>
             </div>
             <div>
                 <input type="checkbox" name="" id="symbols">
-                <label for="symbols">includes uppercase letter</label>
+                <label for="symbols">includes letter</label>
             </div>
 
             <!-- strenght section -->
@@ -56,6 +56,8 @@
             <button class="generateButton">Generate Password</button>
         </div>
     </div>
+
+    <script src="./script.js"></script>
 </body>
 
 </html>

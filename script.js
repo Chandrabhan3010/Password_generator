@@ -26,29 +26,29 @@ const symbols = '!@#$%^&*()_+<>?":~`{}';
 
 let password = "";
 let passwordLength = 10;
-let checkCount = 1;
+let checkCount = 0;
 handleSlider();
 
 //set strenght colour to default grey
 
-// set password length = passs lenght is display by this 
+// set password length = passs lenght is display by this
 function handleSlider() {
   inputSlider.value = passwordLength;
-  lengthDisplay.innerHTML = passwordLength;
+  lengthDisplay.innerText = passwordLength;
   // or kuch bhi krna chahiye
-  const min = inputSlider.min;
-  const max = inputSlider.max;
-  inputSlider.style.backgroundSize =
-    ((passwordLength - min) * 100) / (max - min) + "% 100%";
+//   const min = inputSlider.min;
+//   const max = inputSlider.max;
+//   inputSlider.style.backgroundSize =
+//     ((passwordLength - min) * 100) / (max - min) + "% 100%";
 }
 
 function setIndicator(color) {
-  indicator.style.background = color;
+  indicator.style.backgroundColor = color;
   // shadow
 }
 
 function getRndInteger(min, max) {
-  return Math.random() * (max - min) + min;
+  return Math.floor(Math.random() * (max - min)) + min;
 }
 
 function generateRandomNumber() {
@@ -56,7 +56,7 @@ function generateRandomNumber() {
 }
 
 function generateLowerCase() {
-  return String.fromCharCode(getRndInteger(977, 123));
+  return String.fromCharCode(getRndInteger(97, 123));
 }
 
 function gererateUpperCase() {
@@ -73,69 +73,145 @@ function calcStrength() {
   let hasLower = false;
   let hasNum = false;
   let hasSym = false;
-  if (uppercaseCheck.Checked) hasUpper = true;
-  if (lowercaseCheck.Checked) hasLower = true;
-  if (numbersCheck.Checked) hasNum = true;
-  if (symbolsCheck.Checked) hasSym = true;
+  if (uppercaseCheck.checked) hasUpper = true;
+  if (lowercaseCheck.checked) hasLower = true;
+  if (numbersCheck.checked) hasNum = true;
+  if (symbolsCheck.checked) hasSym = true;
 
   if (hasUpper && hasLower && (hasNum || hasSym) && passwordLength >= 8) {
     setIndicator("#0f0");
-  } else if (
-    (hasLower || hasUpper) &&
-    (hasNum || hasSym) &&
-    passwordLength >= 6
-  ) {
+  } else if (  (hasLower || hasUpper) && (hasNum || hasSym) && passwordLength >= 6 ) {
     setIndicator("#ff0");
   } else {
     setIndicator("#f00");
   }
 }
 
-async function copyContent(){
-    try{
-        await navigator.clipboard.writeText(passwordDisplay.value)
-        copyMsg.innerText ='copied'
+async function copyContent() {
+  try {
+    await navigator.clipboard.writeText(passwordDisplay.value);
+    copyMsg.innerText = "copied";
+  } 
+  catch (e) {
+    copyMsg.innerText = "failed";
+    // console.log("error has been occur");
+  }
+  // to make copy message span visible
+  copyMsg.classList.add("active");
 
-    }
-    catch(e){
-        copyMsg.innerText = 'failed'
-        console.log('error has been occur')
-    }
-    // to make copy message span visible
-    copyMsg.classList.add('active')
+  setTimeout(() => {
+    copyMsg.classList.remove("active");
+  }, 2000);
+}
 
-    setTimeout(() => {
-        copyMsg.classList.remove('active')
-    }, 2000);
+// shuffle changes 
+function shufflePassword(array){
+    //algorithm will be used - fisher yates method
+    for (let i= array.length-1 ; i>0 ; i--){
+        const j =Math.floor(Math.random() * (i+1))
+        const temp = array[i]
+        array[i] = array[j]
+        array[j] = temp
+    }
+    let str = ''
+    array.forEach((el)=>(str += el))
+    return str
 }
 //checkbox
-function handleCheckBoxChange(){
-    checkCount = 0
-    allCheckBox.forEach((checkbox)=>{
-        if(checkbox.Checked)
-        checkCount++
-    })
-    // special condtion
-    if(passwordLength < checkCount){
-        passwordLength = checkCount
-        handleSlider()
-    }
+function handleCheckBoxChange() {
+  checkCount = 0;
+  allCheckBox.forEach((checkbox) => {
+    if (checkbox.checked) checkCount++;
+  });
+  // special condtion
+  if (passwordLength < checkCount) {
+    passwordLength = checkCount;
+    handleSlider();
+  }
 }
 //checkbox
-allCheckBox.forEach((checkbox)=>{
-    checkbox.addEventListener('check' , handleCheckBoxChange)
-})
+allCheckBox.forEach((checkbox) => {
+  checkbox.addEventListener("change", handleCheckBoxChange);
+});
 //slider
-inputSlider.addEventListener('input' , (e)=>{
-    passwordLength = e.target.value;
-    handleSlider()
-})
+inputSlider.addEventListener("input", (e) => {
+  passwordLength = e.target.value;
+  handleSlider();
+});
 //copy button
-copyBtn,addEventListener(()=>{
-    if(passwordDisplay.value)
-    copyContent()
-})
-//generate password 
-generateBtn.addEventListener( 'click' , ()=>{
+copyBtn.addEventListener('click' ,  () => {
+    if (passwordDisplay.value) copyContent();
+  });
+//generate password
+generateBtn.addEventListener("click", () => {
+  //none of the chrck box are selected
+  if (checkCount == 0) 
+  return;
 
-})
+  if (passwordLength < checkCount) {
+    passwordLength = checkCount;
+    handleSlider();
+  }
+
+  //new pass word finding let start
+  console.log('starting the journey')
+  //remove password
+  password = "";
+  // let put the checkbox stuff
+  // if(uppercaseCheck.checkbox){
+  //     password += gererateUpperCase()
+  // }
+
+  // if(lowercaseCheck.checkbox){
+  //     password += generateLowerCase()
+  // }
+
+  // if(numbersCheck.checkbox){
+  //     password += generateRandomNumber()
+  // }
+
+  // if(symbolsCheck.checkbox){
+  //     password += gererateSymbol()
+  // }
+
+  let fucArr = [];
+
+  if (uppercaseCheck.checked) fucArr.push(gererateUpperCase);
+  if (lowercaseCheck.checked) fucArr.push(generateLowerCase);
+  if (numbersCheck.checked) fucArr.push(generateRandomNumber);
+  if (symbolsCheck.checked) fucArr.push(gererateSymbol);
+
+  //compul addintion
+
+  for(let i=0 ; i<fucArr.length ; i++){
+    password += fucArr[i]()
+  }
+  console.log('compulsory addition done')
+
+
+  //remainig addition
+  for(let i=0 ;  i<passwordLength-fucArr.length;i++){
+    let randIndex = getRndInteger(0, fucArr.length)
+    console.log('randIndex' + randIndex)
+    password += fucArr[randIndex]()
+  }
+
+  console.log('remaining addition done ')
+
+  //suffle the psswr
+
+  password = shufflePassword(Array.from(password))
+
+  console.log('suffling done ')
+
+  //show on the display
+  passwordDisplay.value = password
+  console.log('ui addition done')
+
+  //strength calculate
+  calcStrength()
+  
+
+
+
+});

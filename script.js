@@ -30,21 +30,22 @@ let checkCount = 0;
 handleSlider();
 
 //set strenght colour to default grey
+setIndicator('#ccc')
 
 // set password length = passs lenght is display by this
 function handleSlider() {
   inputSlider.value = passwordLength;
   lengthDisplay.innerText = passwordLength;
   // or kuch bhi krna chahiye
-//   const min = inputSlider.min;
-//   const max = inputSlider.max;
-//   inputSlider.style.backgroundSize =
-//     ((passwordLength - min) * 100) / (max - min) + "% 100%";
+  const min = inputSlider.min;
+  const max = inputSlider.max;
+  inputSlider.style.backgroundSize = ((passwordLength - min) * 100) / (max - min) + "% 100%";
 }
 
 function setIndicator(color) {
   indicator.style.backgroundColor = color;
   // shadow
+  indicator.style.boxShadow = `0px 0px 12px 1px ${color}`;
 }
 
 function getRndInteger(min, max) {
@@ -108,7 +109,9 @@ async function copyContent() {
 function shufflePassword(array){
     //algorithm will be used - fisher yates method
     for (let i= array.length-1 ; i>0 ; i--){
+      //randim j find out using random fuction
         const j =Math.floor(Math.random() * (i+1))
+        //swap fuction at i ann j fuction
         const temp = array[i]
         array[i] = array[j]
         array[j] = temp
